@@ -3,3 +3,4 @@ yt-dlp
 pynacl
 davey
 Flask
+ffmpeg-python
