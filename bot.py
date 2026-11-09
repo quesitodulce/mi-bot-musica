@@ -14,7 +14,6 @@ def home():
     return "¡BotsitoChichero está vivo 24/7!"
 
 def run_web():
-    # Render asigna un puerto dinámico, lo leemos con os.environ
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
 
@@ -27,7 +26,7 @@ YTDL_OPTIONS = {
     'format': 'bestaudio/best',
     'noplaylist': True,
     'quiet': True,
-     'default_search': 'scsearch',
+    'default_search': 'scsearch',  # Motor de SoundCloud estable para servidores en la nube
 }
 
 FFMPEG_OPTIONS = {
@@ -51,27 +50,26 @@ async def play(ctx, *, search: str):
     if ctx.voice_client is None:
         await channel.connect()
         
-    await ctx.send(f"🔍 Buscando `{search}`...")
+    await ctx.send(f"🔍 Buscando `{search}` en SoundCloud...")
     try:
         loop = asyncio.get_event_loop()
         data = await loop.run_in_executor(None, lambda: ytdl.extract_info(search, download=False))
         
-        # Seleccionar el primer resultado de la búsqueda [0]
+        # CORREGIDO DEFINITIVAMENTE: Extraer el primer elemento [0] de la lista de resultados
         if 'entries' in data:
             if len(data['entries']) > 0:
                 data = data['entries'][0]
             else:
-                await ctx.send("No se encontraron resultados para tu búsqueda.")
+                await ctx.send("No se encontraron resultados en SoundCloud.")
                 return
                 
         url = data['url']
         title = data['title']
         
         ctx.voice_client.stop()
-        # En Linux/Render no ponemos la ruta C:\ffmpeg\, se busca de forma automática
         player = discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS)
         ctx.voice_client.play(player)
-        await ctx.send(f"🎵 Reproduciendo ahora: **{title}**")
+        await ctx.send(f"🎵 Reproduciendo ahora desde SoundCloud: **{title}**")
         
     except Exception as error_msg:
         await ctx.send("Ocurrió un error al intentar reproducir la canción.")
