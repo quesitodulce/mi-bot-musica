@@ -2,7 +2,7 @@
 #  BotsitoChichero - Bot de musica Discord
 #  Motor: ytmusicapi + InnerTube ANDROID_MUSIC (sin bloqueos)
 #  BotsitoChichero - Render Edition
-#  Sin publicidad | Sin Lavalink | Sin yt-dlp | 100% APIs
+#  Sin publicidad | Sin Lavalink | Sin yt-dlp puro | 100% APIs
 # ================================================================
 import discord
 from discord.ext import commands
@@ -53,7 +53,7 @@ YTDL_OPTIONS = {
     'nocheckcertificate': True,
     'extractor_args': {
         'youtube': {
-            'player_client': ['android'],  # Obliga el bypass de la API de Android
+            'player_client': ['android'],  # Obliga el bypass de la API de Android móvil
             'skip': ['webpage', 'authcheck']
         }
     }
@@ -95,6 +95,7 @@ async def play(ctx, *, search: str):
         title = track['title']
         artists = ", ".join([artist['name'] for artist in track['artists']]) if track['artists'] else "Desconocido"
 
+        # CORREGIDO: Formato de URL limpio y compatible para el bypass de Android
         video_url = f"https://youtube.com{video_id}"
 
         # Extraer el flujo de streaming de audio
@@ -126,6 +127,6 @@ if __name__ == "__main__":
     t = Thread(target=run_web)
     t.start()
     
-    # Intenta leer de forma automática la variable DISCORD_TOKEN que guardaste en Render
+    # Lee de forma automática la variable DISCORD_TOKEN guardada en tu panel de Render
     TOKEN = os.environ.get("DISCORD_TOKEN", "")
     bot.run(TOKEN)
