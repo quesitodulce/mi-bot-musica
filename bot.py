@@ -96,7 +96,9 @@ async def play(ctx, *, search: str):
         artists = ", ".join([artist['name'] for artist in track['artists']]) if track['artists'] else "Desconocido"
 
         # CORREGIDO: Formato de URL limpio y compatible para el bypass de Android
-        video_url = f"https://youtube.com{video_id}"
+        # Lo correcto:
+video_url = f"https://www.youtube.com/watch?v={video_id}"
+# Resultado: "https://www.youtube.com/watch?v=g5dle5vpaao" ✅
 
         # Extraer el flujo de streaming de audio
         loop = asyncio.get_event_loop()
